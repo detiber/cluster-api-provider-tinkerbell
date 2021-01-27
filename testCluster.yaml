@@ -11,6 +11,9 @@ spec:
   kubeadmConfigSpec:
     users:
       - name: tink
+        groups: wheel
+        lockPassword: false
+        passwd: "$6$rounds=4096$eWIEHHK8BjHezE8F$cf2nkZF8Oy2ST4g6VMJTRU2c8yGbDMo6bZ1A6LEgZtlt0ec705o/0LJwkp8vKeczOrwdhc9wVd/igX0peTQhM1"
         sudo: "ALL=(ALL) NOPASSWD:ALL"
         sshAuthorizedKeys:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9Mh25GjJGqCQd+zAu49XoCaZvQCuNHZcFVPwREE1LgFlN6awfEScACMyTJLLGvkx8Jfe75uVgElhs4hMwgkHwOQ9fmF/rL7yqaNK1dnSfMFeLd2EO8flA6J9kXnNX+zXTzlz7tkqionZ+n103XHuEn0JHtYRr7LBwqf2P4itC4mQVOJzJZhdKPoIO9pVxiixBTYcgQ+oMiruBBHPNG2OyiB4kOA2y2qOrxuLuG2p5abU3A+hz/TnRU4EfxuETO/L3TH8U/KdO0rxapxAjf+QQeSJn9cjDR9pwe5I6aDVSspEscsXqjo1ctOcTgNimuHxYHSpgJLxiYCfEr1yVqQggcur2xu9/bCyhVZCKfqgew8KwsSD3bo5zrMPxXQ/Qm5Ee6jKDc9qv/i2+S2vDZShC5jxO6V4rpliwgZOaK3rRZDNzG1JuybYsnwNzpnobqaUZfYThrVjTxbc5JjDq9Ge2KE8U86j6Nq5nyNTxkLEtB9DGyHSMP6EVjcESSVPZrl0= detiber@loggerhead.local.detiberus.net
@@ -116,6 +119,9 @@ spec:
     spec:
       users:
         - name: tink
+          groups: wheel
+          lockPassword: false
+          passwd: "$6$rounds=4096$eWIEHHK8BjHezE8F$cf2nkZF8Oy2ST4g6VMJTRU2c8yGbDMo6bZ1A6LEgZtlt0ec705o/0LJwkp8vKeczOrwdhc9wVd/igX0peTQhM1"
           sudo: "ALL=(ALL) NOPASSWD:ALL"
           sshAuthorizedKeys:
             - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9Mh25GjJGqCQd+zAu49XoCaZvQCuNHZcFVPwREE1LgFlN6awfEScACMyTJLLGvkx8Jfe75uVgElhs4hMwgkHwOQ9fmF/rL7yqaNK1dnSfMFeLd2EO8flA6J9kXnNX+zXTzlz7tkqionZ+n103XHuEn0JHtYRr7LBwqf2P4itC4mQVOJzJZhdKPoIO9pVxiixBTYcgQ+oMiruBBHPNG2OyiB4kOA2y2qOrxuLuG2p5abU3A+hz/TnRU4EfxuETO/L3TH8U/KdO0rxapxAjf+QQeSJn9cjDR9pwe5I6aDVSspEscsXqjo1ctOcTgNimuHxYHSpgJLxiYCfEr1yVqQggcur2xu9/bCyhVZCKfqgew8KwsSD3bo5zrMPxXQ/Qm5Ee6jKDc9qv/i2+S2vDZShC5jxO6V4rpliwgZOaK3rRZDNzG1JuybYsnwNzpnobqaUZfYThrVjTxbc5JjDq9Ge2KE8U86j6Nq5nyNTxkLEtB9DGyHSMP6EVjcESSVPZrl0= detiber@loggerhead.local.detiberus.net
