@@ -18,6 +18,11 @@ spec:
       containers:
       - command:
         - /manager
+        env:
+        - name: TINKERBELL_CERT_URL
+          value: http://tink-server.default:42114/cert
+        - name: TINKERBELL_GRPC_AUTHORITY
+          value: tink-server.default:42113
         args:
         - --enable-leader-election
         image: tinkerbell-controller

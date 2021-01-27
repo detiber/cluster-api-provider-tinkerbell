@@ -1,0 +1,131 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: KubeadmControlPlane
+metadata:
+  name: test-control-plane
+  namespace: default
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: TinkerbellMachineTemplate
+    name: test-control-plane
+  kubeadmConfigSpec:
+    users:
+      - name: tink
+        groups: wheel
+        lockPassword: false
+        passwd: "$6$rounds=4096$eWIEHHK8BjHezE8F$cf2nkZF8Oy2ST4g6VMJTRU2c8yGbDMo6bZ1A6LEgZtlt0ec705o/0LJwkp8vKeczOrwdhc9wVd/igX0peTQhM1"
+        sudo: "ALL=(ALL) NOPASSWD:ALL"
+        sshAuthorizedKeys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9Mh25GjJGqCQd+zAu49XoCaZvQCuNHZcFVPwREE1LgFlN6awfEScACMyTJLLGvkx8Jfe75uVgElhs4hMwgkHwOQ9fmF/rL7yqaNK1dnSfMFeLd2EO8flA6J9kXnNX+zXTzlz7tkqionZ+n103XHuEn0JHtYRr7LBwqf2P4itC4mQVOJzJZhdKPoIO9pVxiixBTYcgQ+oMiruBBHPNG2OyiB4kOA2y2qOrxuLuG2p5abU3A+hz/TnRU4EfxuETO/L3TH8U/KdO0rxapxAjf+QQeSJn9cjDR9pwe5I6aDVSspEscsXqjo1ctOcTgNimuHxYHSpgJLxiYCfEr1yVqQggcur2xu9/bCyhVZCKfqgew8KwsSD3bo5zrMPxXQ/Qm5Ee6jKDc9qv/i2+S2vDZShC5jxO6V4rpliwgZOaK3rRZDNzG1JuybYsnwNzpnobqaUZfYThrVjTxbc5JjDq9Ge2KE8U86j6Nq5nyNTxkLEtB9DGyHSMP6EVjcESSVPZrl0= detiber@loggerhead.local.detiberus.net
+    clusterConfiguration: {}
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: PROVIDER_ID
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: PROVIDER_ID
+  replicas: 1
+  version: v1.20.2
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: TinkerbellMachineTemplate
+metadata:
+  name: test-control-plane
+  namespace: default
+spec:
+  template:
+    spec: {}
+---
+apiVersion: cluster.x-k8s.io/v1alpha3
+kind: Cluster
+metadata:
+  name: test
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    services:
+      cidrBlocks:
+      - 172.26.0.0/16
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmControlPlane
+    name: test-control-plane
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: TinkerbellCluster
+    name: test
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: TinkerbellCluster
+metadata:
+  name: test
+  namespace: default
+spec: {}
+---
+apiVersion: cluster.x-k8s.io/v1alpha3
+kind: MachineDeployment
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: test
+    pool: worker-a
+  name: test-worker-a
+  namespace: default
+spec:
+  clusterName: test
+  replicas: 0
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: test
+      pool: worker-a
+  template:
+    metadata:
+      labels:
+        cluster.x-k8s.io/cluster-name: test
+        pool: worker-a
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: KubeadmConfigTemplate
+          name: test-worker-a
+      clusterName: test
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: TinkerbellMachineTemplate
+        name: test-worker-a
+      version: v1.20.2
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: TinkerbellMachineTemplate
+metadata:
+  name: test-worker-a
+  namespace: default
+spec:
+  template:
+    spec: {}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: KubeadmConfigTemplate
+metadata:
+  name: test-worker-a
+  namespace: default
+spec:
+  template:
+    spec:
+      users:
+        - name: tink
+          groups: wheel
+          lockPassword: false
+          passwd: "$6$rounds=4096$eWIEHHK8BjHezE8F$cf2nkZF8Oy2ST4g6VMJTRU2c8yGbDMo6bZ1A6LEgZtlt0ec705o/0LJwkp8vKeczOrwdhc9wVd/igX0peTQhM1"
+          sudo: "ALL=(ALL) NOPASSWD:ALL"
+          sshAuthorizedKeys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9Mh25GjJGqCQd+zAu49XoCaZvQCuNHZcFVPwREE1LgFlN6awfEScACMyTJLLGvkx8Jfe75uVgElhs4hMwgkHwOQ9fmF/rL7yqaNK1dnSfMFeLd2EO8flA6J9kXnNX+zXTzlz7tkqionZ+n103XHuEn0JHtYRr7LBwqf2P4itC4mQVOJzJZhdKPoIO9pVxiixBTYcgQ+oMiruBBHPNG2OyiB4kOA2y2qOrxuLuG2p5abU3A+hz/TnRU4EfxuETO/L3TH8U/KdO0rxapxAjf+QQeSJn9cjDR9pwe5I6aDVSspEscsXqjo1ctOcTgNimuHxYHSpgJLxiYCfEr1yVqQggcur2xu9/bCyhVZCKfqgew8KwsSD3bo5zrMPxXQ/Qm5Ee6jKDc9qv/i2+S2vDZShC5jxO6V4rpliwgZOaK3rRZDNzG1JuybYsnwNzpnobqaUZfYThrVjTxbc5JjDq9Ge2KE8U86j6Nq5nyNTxkLEtB9DGyHSMP6EVjcESSVPZrl0= detiber@loggerhead.local.detiberus.net
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+            provider-id: PROVIDER_ID

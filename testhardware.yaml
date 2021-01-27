@@ -1,0 +1,14 @@
+---
+kind: Hardware
+apiVersion: tinkerbell.org/v1alpha1
+metadata:
+  name: test-hw1
+spec:
+  id: ce2e62ed-826f-4485-a39f-a82bb74338e2
+---
+kind: Hardware
+apiVersion: tinkerbell.org/v1alpha1
+metadata:
+  name: test-hw2
+spec:
+  id: fe2e62ed-826f-4485-a39f-a82bb74338e3

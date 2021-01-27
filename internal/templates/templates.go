@@ -111,7 +111,8 @@ tasks:
           - sh
           - -c
           - |
-            /usr/bin/qemu-img convert -f qcow2 -O raw /statedir/focal-server-cloudimg-amd64.img /dev/vda
+            target_device=$(lsblk -l | grep disk | grep -v SWAP | head -n 1 | cut -d ' ' -f 1)
+            /usr/bin/qemu-img convert -f qcow2 -O raw /statedir/focal-server-cloudimg-amd64.img /dev/$target_device
       - name: "write-cloud-init-config"
         image: ubuntu-install
         command:
@@ -119,9 +120,11 @@ tasks:
           - -c
           - |
             set -eux
-            partprobe /dev/vda
+            target_device=$(lsblk -l | grep disk | grep -v SWAP | head -n 1 | cut -d ' ' -f 1)
+            partprobe /dev/$target_device
+            target_part=$(lsblk -l | grep $target_device | grep part | head -n 1 | cut -d ' ' -f 1)
             mkdir -p /mnt/target
-            mount -t ext4 /dev/vda1 /mnt/target
+            mount -t ext4 /dev/${target_part} /mnt/target
             cp /statedir/90_dpkg.cfg /mnt/target/etc/cloud/cloud.cfg.d/
             # Those commands are required to satisfy kubeadm preflight checks.
             # We cannot put those in 'write_files' or 'runcmd' from cloud-config, as it will override
