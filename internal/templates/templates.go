@@ -103,7 +103,7 @@ tasks:
           - |
             # TODO: Pull image from Tinkerbell nginx and convert it there, so we can pipe
             # wget directly into dd.
-            /usr/bin/wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img \
+            /usr/bin/wget http://192.168.1.2/focal-server-cloudimg-amd64.img \
               -O /statedir/focal-server-cloudimg-amd64.img
       - name: "write-image-to-disk"
         image: ubuntu-install
